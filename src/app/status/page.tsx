@@ -33,7 +33,7 @@ export default function Status() {
           <p className="text-xl font-bold">Call Status Page </p>
           <p className="flex text-gray-600 text-lg  pt-4">
             <Lightbulb className="text-red-500" />
-            Note: Free for to close this browser. A summary of the
+            Note: Feel free to close this browser. A summary of the
             interaction(s) will be sent to your email.
           </p>
           <div className="md:grid md:grid-cols-2 flex flex-col gap-2 md:gap-12 w-full md:mt-14 mt-4 text-lg h-2/3">

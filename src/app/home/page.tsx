@@ -83,15 +83,12 @@ export default function Home() {
             background: "linear-gradient(135deg, #100A2C, #321F89)", // Gradient shades of blue
           }}
         >
-          {/* Card Content */}
           <div className="py-6 px-8 grid grid-cols-2 gap-4 ">
-            {/* Table Header */}
             <div className="col-span-2 flex  border-b border-gray-400 pb-2">
               <p className="text-lg font-bold">Type of calls</p>
               <p className="text-lg font-bold md:pl-[34rem] pl-[4rem]">Number of calls</p>
             </div>
 
-            {/* Data Rows */}
             <div>
               {callData.map((call, index) => (
                 <p key={index} className="text-md font-medium">

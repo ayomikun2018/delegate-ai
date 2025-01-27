@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import {
   PlusCircleIcon,
   Trash2,
@@ -212,7 +213,7 @@ export default function Contact() {
             {/* Conditional Rendering */}
             {selectedOption === "manual" && (
               <>
-                <div className="flex flex-col  gap-4">
+                <div className="flex flex-col  gap-4 pt-4">
                   <Label htmlFor="patient" className="w-auto">
                     Patient Name
                   </Label>
@@ -223,6 +224,24 @@ export default function Contact() {
                     Patient Phone Number
                   </Label>
                   <Input />
+                </div>
+                <div className="flex flex-col space-y-4">
+                  <Label
+                    htmlFor="patient"
+                    className=" w-auto  text-slate-600 "
+                  >
+                    Objective
+                  </Label>
+                  <Textarea />
+                </div>
+                <div className="flex flex-col space-y-4">
+                  <Label
+                    htmlFor="number"
+                    className=" w-auto text-slate-600 "
+                  >
+                    Additional Details
+                  </Label>
+                  <Textarea />
                 </div>
               </>
             )}
@@ -319,25 +338,6 @@ export default function Contact() {
                   >
                     <Trash2 />
                   </Button>
-
-                  {/* <div className="flex flex-col space-y-4">
-                    <Label
-                      htmlFor="patient"
-                      className=" w-auto font-semibold text-slate-600 "
-                    >
-                      Objective
-                    </Label>
-                    <Textarea />
-                  </div>
-                  <div className="flex flex-col space-y-4">
-                    <Label
-                      htmlFor="number"
-                      className=" w-auto font-semibold text-slate-600 "
-                    >
-                      Additional Details
-                    </Label>
-                    <Textarea />
-                  </div> */}
                 </div>
               ))}
             {selectedOption === "ehr" && (
