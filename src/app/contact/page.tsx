@@ -11,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import {
   PlusCircleIcon,
   Trash2,
@@ -22,15 +21,6 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 export default function Contact() {
-  const periods = [
-    { value: "today", label: "Today" },
-    { value: "yesterday", label: "Yesterday" },
-    { value: "last7days", label: "Last 7 days" },
-    { value: "last30days", label: "Last 30 days" },
-    { value: "last90days", label: "Last 90 days" },
-    { value: "last365days", label: "Last 365 days" },
-    { value: "custom", label: "Custom" },
-  ];
   const ehrOptions = [
     { value: "abeldent", label: "ABELDent" },
     { value: "advancedmd", label: "AdvancedMD" },
@@ -238,7 +228,7 @@ export default function Contact() {
             )}
 
             {selectedOption === "ehr" &&
-              journeys.map((journey, index) => (
+              journeys.map((journey) => (
                 <div
                   key={journey.id}
                   className="md:grid md:grid-cols-3 gap-6  flex flex-col items-end mb-4 border-b pb-4 mt-6"

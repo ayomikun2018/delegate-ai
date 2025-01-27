@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/card";
-import CustomCard from "@/components/ui/custom-card";
 import { ChevronDown, Lightbulb } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -55,7 +54,7 @@ export default function Status() {
               </p>
               <p className="text-gray-600">Calling Dr.Jones...:</p>
               <p>Patient name:</p>
-              <p>8:04 Hi I'm calling to...</p>
+              <p>8:04 Hi I&apos;m calling to...</p>
               <p>Calling Dr.Jones...</p>
             </Card>
           </div>
