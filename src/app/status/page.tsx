@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import axios from "axios";
 import { ChevronDown, Lightbulb } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -139,7 +139,7 @@ export default function Status() {
         console.error("WebSocket Error:", error);
       };
     }
-  }, [callStatus.isInitiated, callStatus.ssid, callStatus.email, toast]);
+  }, [callStatus.isInitiated, callStatus.ssid, callStatus.email]);
 
   const getDisplayTranscript = () => {
     if (transcriptArray.length > 0) {
@@ -149,7 +149,7 @@ export default function Status() {
   };
 
   return (
-    <div className="mt-20 h-screen ">
+    <Suspense className="mt-20 h-screen " fallback={<div>Loading...</div>}>
       <Navbar />
       <div className="px-8 flex flex-col gap-4 bg-slate-100 py-12 h-full overflow-hidden">
         <p className="text-xl font-bold">Call Status Page </p>
@@ -178,20 +178,22 @@ export default function Status() {
             )}
           </Card>
 
-          <Card className="flex-grow rounded-lg space-y-4 px-6 py-6 overflow-y-auto">
-            <p className="text-xl font-bold bg-[#24AD4214] text-[#24AD42] px-2 py-2">
-              Live transcript
-            </p>
-            <ScrollArea className="h-full">
-              {showTranscript && (
-                <pre className="whitespace-pre-wrap pt-4 max-h-96 overflow-y-auto">
-                  {getDisplayTranscript()}
-                </pre>
-              )}
-            </ScrollArea>
-          </Card>
+          <Suspense>
+            <Card className="flex-grow rounded-lg space-y-4 px-6 py-6 overflow-y-auto">
+              <p className="text-xl font-bold bg-[#24AD4214] text-[#24AD42] px-2 py-2">
+                Live transcript
+              </p>
+              <ScrollArea className="h-full">
+                {showTranscript && (
+                  <pre className="whitespace-pre-wrap pt-4 max-h-96 overflow-y-auto">
+                    {getDisplayTranscript()}
+                  </pre>
+                )}
+              </ScrollArea>
+            </Card>
+          </Suspense>
         </div>
       </div>
-    </div>
+    </Suspense>
   );
 }
