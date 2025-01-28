@@ -1,9 +1,12 @@
+//@ts-nocheck
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useNavigate } from "react-router-dom";
+
 import {
   Select,
   SelectContent,
@@ -12,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import axios from "axios";
 import {
   PlusCircleIcon,
   Trash2,
@@ -20,8 +24,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import Navbar from "@/components/general-components/navbar";
 
 export default function Contact() {
+  const router = useRouter();
   const ehrOptions = [
     { value: "abeldent", label: "ABELDent" },
     { value: "advancedmd", label: "AdvancedMD" },
@@ -164,34 +171,59 @@ export default function Contact() {
       )
     );
   };
+  const [phoneNumber, setPhoneNumber] = useState(""); // State for phone number input
+  const [patientName, setPatientName] = useState(""); // State for phone number input
+  const [email, setEmail] = useState(""); // State for email input
+  const [patientHistory, setPatientHistory] = useState(""); // State for email input
+  const [objective, setObjective] = useState(""); // State for call objective
+  const [responseMessage, setResponseMessage] = useState("");
 
+  // Handle input change
+  const handleInputChange = (setter: any) => (e: any) => setter(e.target.value);
+
+  // Function to make the call
+  const handleMakeCall = async () => {
+    if (!phoneNumber || !patientName || !objective || !patientHistory) {
+      setResponseMessage("Please fill in all the fields.");
+      return;
+    }
+
+    try {
+      const backendUrl =
+        "https://callai-backend-243277014955.us-central1.run.app/api/v2/initiate-call";
+      // const backendUrl = "https://dc6b-103-199-205-140.ngrok-free.app/api/initiate-call"
+      // Send request to backend
+      const response = await axios.post(backendUrl, {
+        patient_number: phoneNumber,
+        patient_name: patientName,
+        objective,
+        patient_history: patientHistory,
+      });
+      router.push(
+        `/status?ssid=${
+          response.data.call_sid
+        }&isInitiated=true&patient_number=${encodeURIComponent(
+          phoneNumber
+        )}&patient_name=${encodeURIComponent(
+          patientName
+        )}&objective=${encodeURIComponent(
+          objective
+        )}&patient_history=${encodeURIComponent(patientHistory)}`
+      );
+    } catch (error: any) {
+      setResponseMessage(
+        `Failed to initiate the call. Error: ${
+          error.response?.data?.detail || error.message
+        }`
+      );
+    }
+  };
   return (
     <div className="">
-      <div className="fixed top-0 left-0 w-full z-50 border border-b-2 border-gray-200 bg-white">
-        <div className="flex justify-between pt-6 pb-2 px-8 relative">
-          <div className="flex gap-2 justify-center items-center text-lg">
-            <p className="font-bold ">Delegate</p>
-            <span className="flex justify-items-start font-semibold rounded-full bg-green-600 text-white px-2 h-4 text-xs">
-              AI
-            </span>
-          </div>
-          <div className="flex justify-between gap-6 pt-2">
-            <div className="flex flex-col justify-self-end text-end">
-              <p className="text-lg">Happy Dental</p>
-              <Link href={""} className="text-primary-blue text-xs underline">
-                Demo Mode
-              </Link>
-            </div>
-            <Link href={""} className="flex gap-1">
-              <div className="bg-gray-200 rounded-full p-6"></div>
-              <ChevronDown className="flex self-center" />
-            </Link>
-          </div>
-        </div>
-      </div>
-      <div className="md:px-8 px-2 bg-slate-100 flex flex-col gap-6 pb-4 ">
-        <Card className="rounded-lg space-y-4 px-6 py-6 mt-28 ">
-          <form className="flex flex-col gap-6 pt-2">
+      <Navbar />
+      <div className="md:px-8 px-2 bg-slate-100 flex flex-col gap-6 pb-16 pt-6 ">
+        <Card className="rounded-lg space-y-4 px-8 py-6 mt-28  flex flex-col  self-center  ">
+          <div className="flex flex-col gap-6 pt-2">
             <RadioGroup
               value={selectedOption}
               onValueChange={(value) => setSelectedOption(value)}
@@ -214,34 +246,54 @@ export default function Contact() {
             {selectedOption === "manual" && (
               <>
                 <div className="flex flex-col  gap-4 pt-4">
-                  <Label htmlFor="patient" className="w-auto">
+                  <Label
+                    htmlFor="patient"
+                    className="w-auto font-semibold text-slate-600"
+                  >
                     Patient Name
                   </Label>
-                  <Input />
+                  <Input
+                    value={patientName}
+                    onChange={handleInputChange(setPatientName)}
+                  />
                 </div>
                 <div className="flex flex-col  gap-4">
-                  <Label htmlFor="number" className="w-auto">
+                  <Label
+                    htmlFor="number"
+                    className="w-auto font-semibold text-slate-600"
+                  >
                     Patient Phone Number
                   </Label>
-                  <Input />
+                  <Input
+                    type="tel"
+                    value={phoneNumber}
+                    onChange={handleInputChange(setPhoneNumber)}
+                  />
                 </div>
                 <div className="flex flex-col space-y-4">
                   <Label
                     htmlFor="patient"
-                    className=" w-auto  text-slate-600 "
+                    className=" w-auto  font-semibold text-slate-600"
                   >
                     Objective
                   </Label>
-                  <Textarea />
+                  <Textarea
+                    id="objective"
+                    value={objective}
+                    onChange={handleInputChange(setObjective)}
+                  />
                 </div>
                 <div className="flex flex-col space-y-4">
                   <Label
                     htmlFor="number"
-                    className=" w-auto text-slate-600 "
+                    className=" w-auto text-slate-600 font-semibold "
                   >
                     Additional Details
                   </Label>
-                  <Textarea />
+                  <Textarea
+                    value={patientHistory}
+                    onChange={handleInputChange(setPatientHistory)}
+                  />
                 </div>
               </>
             )}
@@ -250,7 +302,7 @@ export default function Contact() {
               journeys.map((journey) => (
                 <div
                   key={journey.id}
-                  className="md:grid md:grid-cols-3 gap-6  flex flex-col items-end mb-4 border-b pb-4 mt-6"
+                  className="  flex flex-col items-end mb-4 border-b pb-4 mt-6 gap-6"
                 >
                   <div className="flex flex-col space-y-4 w-full">
                     <Label
@@ -352,12 +404,26 @@ export default function Contact() {
                 </Button>
               </div>
             )}
-            <Link href={"/status"} className="flex gap-1 justify-start">
-              <Button className="px-14 py-6 bg-blue-900">
+            <div className="flex gap-1 justify-center">
+              <Button
+                className="px-14 py-6 bg-blue-900"
+                onClick={handleMakeCall}
+              >
                 <PhoneCallIcon /> Call the patient
               </Button>
-            </Link>
-          </form>
+            </div>
+          </div>
+          {responseMessage && (
+            <p
+              className={`mt-4 text-center font-medium max-w-full break-words ${
+                responseMessage.includes("Failed")
+                  ? "text-red-500"
+                  : "text-green-500"
+              }`}
+            >
+              {responseMessage}
+            </p>
+          )}
         </Card>
       </div>
     </div>
