@@ -219,7 +219,7 @@ export default function Contact() {
     }
   };
   return (
-    <div className="">
+    <div className=" ">
       <Navbar />
       <div className="md:px-8 px-2 bg-slate-100 flex flex-col gap-6 pb-16 pt-6 ">
         <Card className="rounded-lg space-y-4 px-8 py-6 mt-28  flex flex-col  self-center  ">

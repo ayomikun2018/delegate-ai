@@ -10,7 +10,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Navbar from "@/components/general-components/navbar";
 
-export default function Status() {
+function StatusPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -149,7 +149,7 @@ export default function Status() {
   };
 
   return (
-    <Suspense className="mt-20 h-screen " fallback={<div>Loading...</div>}>
+    <div className="mt-20 h-screen ">
       <Navbar />
       <div className="px-8 flex flex-col gap-4 bg-slate-100 py-12 h-full overflow-hidden">
         <p className="text-xl font-bold">Call Status Page </p>
@@ -194,6 +194,13 @@ export default function Status() {
           </Suspense>
         </div>
       </div>
+    </div>
+  );
+}
+export default function Status() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <StatusPage />
     </Suspense>
   );
 }
