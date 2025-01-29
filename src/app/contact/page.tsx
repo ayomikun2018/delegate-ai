@@ -147,6 +147,7 @@ export default function Contact() {
   ];
 
   const [selectedOption, setSelectedOption] = useState("manual");
+  const [loading, setLoading] = useState(false);
   const [journeys, setJourneys] = useState([
     { id: 1, ehr: "", group: "", step: "" },
   ]);
@@ -188,17 +189,21 @@ export default function Contact() {
       return;
     }
 
+    setLoading(true); // Start loading
+
     try {
       const backendUrl =
         "https://callai-backend-243277014955.us-central1.run.app/api/v2/initiate-call";
-      // const backendUrl = "https://dc6b-103-199-205-140.ngrok-free.app/api/initiate-call"
-      // Send request to backend
+
+      const selectedBusiness = localStorage.getItem("selectedBusiness");
       const response = await axios.post(backendUrl, {
         patient_number: phoneNumber,
         patient_name: patientName,
         objective,
         patient_history: patientHistory,
+        name_of_org: selectedBusiness,
       });
+
       router.push(
         `/status?ssid=${
           response.data.call_sid
@@ -208,7 +213,9 @@ export default function Contact() {
           patientName
         )}&objective=${encodeURIComponent(
           objective
-        )}&patient_history=${encodeURIComponent(patientHistory)}`
+        )}&patient_history=${encodeURIComponent(
+          patientHistory
+        )}&selectedBusiness=${encodeURIComponent(selectedBusiness)}`
       );
     } catch (error: any) {
       setResponseMessage(
@@ -216,6 +223,8 @@ export default function Contact() {
           error.response?.data?.detail || error.message
         }`
       );
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
   return (
@@ -406,10 +415,38 @@ export default function Contact() {
             )}
             <div className="flex gap-1 justify-center">
               <Button
-                className="px-14 py-6 bg-blue-900"
                 onClick={handleMakeCall}
+                disabled={loading}
+                className="relative bg-blue-900"
               >
-                <PhoneCallIcon /> Call the patient
+                {loading ? (
+                  <div className="flex items-center">
+                    <svg
+                      className="animate-spin h-5 w-5 mr-2 text-white"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4l-3 3 3 3h-4z"
+                      ></path>
+                    </svg>
+                    Calling...
+                  </div>
+                ) : (
+                  <>
+                    <PhoneCallIcon className="mr-2 h-5 w-5 " /> Call the Patient
+                  </>
+                )}
               </Button>
             </div>
           </div>
